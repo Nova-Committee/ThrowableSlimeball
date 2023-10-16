@@ -5,7 +5,7 @@ plugins {
 }
 
 
-group = 'committee.nova.forge.throwableslimeball'
+group = 'committee.nova.throwableslimeball.forge'
 version = '1.0.0'
 
 java {
@@ -165,4 +165,25 @@ jar.finalizedBy('reobfJar')
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = "${project.archives_base_name}-${project.minecraft_version}"
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        maven {
+            name = "release"
+            url = 'https://maven.nova-committee.cn/releases'
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+    }
 }
