@@ -3,7 +3,7 @@ package committee.nova.throwableslimeball;
 import committee.nova.throwableslimeball.common.config.CommonConfig;
 import committee.nova.throwableslimeball.common.entity.init.EntityTypeReference;
 import committee.nova.throwableslimeball.common.item.init.ItemReference;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -24,8 +24,8 @@ public class ThrowableSlimeball {
 
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MODID);
     public static final DeferredRegister<Item> ITEMS_VANILLA = DeferredRegister.create(ForgeRegistries.ITEMS, "minecraft");
-    public static final TagKey<EntityType<?>> ENTITY_SLIME = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(MODID, "slime"));
-    public static final TagKey<EntityType<?>> ENTITY_MAGMA_CUBE = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(MODID, "magma_cube"));
+    public static final TagKey<EntityType<?>> ENTITY_SLIME = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(MODID, "slime"));
+    public static final TagKey<EntityType<?>> ENTITY_MAGMA_CUBE = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(MODID, "magma_cube"));
     public static final TagKey<Block> BLOCK_ELASTIC = BlockTags.create(new ResourceLocation(MODID, "elastic"));
     public static final TagKey<Block> BLOCK_STICKY = BlockTags.create(new ResourceLocation(MODID, "sticky"));
 

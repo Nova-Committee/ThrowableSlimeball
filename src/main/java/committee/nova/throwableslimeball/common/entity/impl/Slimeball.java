@@ -60,11 +60,11 @@ public class Slimeball extends ThrowableItemProjectile {
     public void handleEntityEvent(byte id) {
         if (id < 3 || id > 5) return;
         final boolean bounce = id != 3;
-        level().playLocalSound(getX(), getY(), getZ(), bounce ? getBounceSound() : getDestroySound(),
+        level.playLocalSound(getX(), getY(), getZ(), bounce ? getBounceSound() : getDestroySound(),
                 SoundSource.BLOCKS, bounce ? .5F : .25F, bounce ? (.2F * elasticity + random.nextFloat() * .1F) : .8F, true);
         ParticleOptions particleoptions = this.getParticle(bounce);
         for (int i = 0; i < 20 - 4 * id; ++i) {
-            this.level().addParticle(particleoptions, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+            level.addParticle(particleoptions, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
         }
     }
 
@@ -75,7 +75,7 @@ public class Slimeball extends ThrowableItemProjectile {
     @Override
     protected void onHitEntity(EntityHitResult result) {
         super.onHitEntity(result);
-        if (level().isClientSide()) return;
+        if (level.isClientSide()) return;
         final Entity e = result.getEntity();
         if (!(e instanceof LivingEntity l)) {
             bounce(e.getMotionDirection().getOpposite(), true);
@@ -93,7 +93,7 @@ public class Slimeball extends ThrowableItemProjectile {
     @Override
     protected void onHitBlock(BlockHitResult result) {
         super.onHitBlock(result);
-        final BlockState state = level().getBlockState(result.getBlockPos());
+        final BlockState state = level.getBlockState(result.getBlockPos());
         if (state.is(ThrowableSlimeball.BLOCK_STICKY)) destroy();
         else if (state.is(ThrowableSlimeball.BLOCK_ELASTIC)) bounce(result.getDirection(), false);
         else if (elasticity-- <= 0) destroy();
@@ -125,11 +125,11 @@ public class Slimeball extends ThrowableItemProjectile {
                         axis.equals(Direction.Axis.Y) ? -1.0 : 1.0,
                         axis.equals(Direction.Axis.Z) ? -1.0 : 1.0
                 ));
-        this.level().broadcastEntityEvent(this, (byte) (decay ? 4 : 5));
+        this.level.broadcastEntityEvent(this, (byte) (decay ? 4 : 5));
     }
 
     protected void destroy() {
-        this.level().broadcastEntityEvent(this, (byte) 3);
+        this.level.broadcastEntityEvent(this, (byte) 3);
         this.discard();
     }
 
@@ -151,7 +151,7 @@ public class Slimeball extends ThrowableItemProjectile {
     }
 
     protected DamageSource getDamageSource() {
-        return this.damageSources().thrown(this, this.getOwner());
+        return DamageSource.thrown(this, this.getOwner());
     }
 
     public int getMaxBounceTimes() {
