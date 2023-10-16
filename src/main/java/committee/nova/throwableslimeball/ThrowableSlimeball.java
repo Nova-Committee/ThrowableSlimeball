@@ -22,7 +22,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class ThrowableSlimeball {
     public static final String MODID = "throwable_slimeball";
 
-    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MODID);
+    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, MODID);
     public static final DeferredRegister<Item> ITEMS_VANILLA = DeferredRegister.create(ForgeRegistries.ITEMS, "minecraft");
     public static final TagKey<EntityType<?>> ENTITY_SLIME = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(MODID, "slime"));
     public static final TagKey<EntityType<?>> ENTITY_MAGMA_CUBE = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(MODID, "magma_cube"));
