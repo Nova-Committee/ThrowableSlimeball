@@ -12,5 +12,6 @@ public class ModClientEventHandler {
     @SubscribeEvent
     public static void onRegisterRenderer(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(EntityTypeReference.SLIME_BALL.cast(), ThrownItemRenderer::new);
+        event.registerEntityRenderer(EntityTypeReference.MAGMA_CREAM.cast(), ThrownItemRenderer::new);
     }
 }
