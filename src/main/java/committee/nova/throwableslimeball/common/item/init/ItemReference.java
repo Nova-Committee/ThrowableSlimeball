@@ -3,8 +3,8 @@ package committee.nova.throwableslimeball.common.item.init;
 import committee.nova.throwableslimeball.ThrowableSlimeball;
 import committee.nova.throwableslimeball.common.item.impl.MagmaCreamItem;
 import committee.nova.throwableslimeball.common.item.impl.SlimeballItem;
-import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraft.item.Item;
+import net.minecraftforge.fml.RegistryObject;
 
 import java.util.Locale;
 import java.util.function.Supplier;

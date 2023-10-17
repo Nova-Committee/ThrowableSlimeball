@@ -3,31 +3,31 @@ package committee.nova.throwableslimeball.common.entity.impl;
 import committee.nova.throwableslimeball.ThrowableSlimeball;
 import committee.nova.throwableslimeball.common.config.CommonConfig;
 import committee.nova.throwableslimeball.common.entity.init.EntityTypeReference;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.projectile.ProjectileItemEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.world.World;
 
 public class MagmaCream extends Slimeball {
-    public MagmaCream(EntityType<? extends ThrowableItemProjectile> t, Level l) {
+    public MagmaCream(EntityType<? extends ProjectileItemEntity> t, World l) {
         super(t, l);
     }
 
-    private MagmaCream(Level l, LivingEntity e) {
+    private MagmaCream(World l, LivingEntity e) {
         super(EntityTypeReference.MAGMA_CREAM.cast(), e, l);
     }
 
-    public static MagmaCream from(Level l, LivingEntity e, ItemStack stack) {
+    public static MagmaCream from(World l, LivingEntity e, ItemStack stack) {
         final MagmaCream ball = new MagmaCream(l, e);
         ball.setItem(stack);
-        ball.shootFromRotation(e, e.getXRot(), e.getYRot(), 0.0F, 1.5F, 1.0F);
+        ball.shootFromRotation(e, e.xRot, e.yRot, 0.0F, 1.5F, 1.0F);
         return ball;
     }
 
@@ -37,7 +37,7 @@ public class MagmaCream extends Slimeball {
     }
 
     @Override
-    protected ParticleOptions getParticle(boolean bounce) {
+    protected IParticleData getParticle(boolean bounce) {
         return bounce ? ParticleTypes.ITEM_SLIME : ParticleTypes.LAVA;
     }
 

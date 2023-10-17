@@ -3,51 +3,47 @@ package committee.nova.throwableslimeball.common.entity.impl;
 import committee.nova.throwableslimeball.ThrowableSlimeball;
 import committee.nova.throwableslimeball.common.config.CommonConfig;
 import committee.nova.throwableslimeball.common.entity.init.EntityTypeReference;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.Slime;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.monster.SlimeEntity;
+import net.minecraft.entity.projectile.ProjectileItemEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.world.Explosion;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 
-public class Slimeball extends ThrowableItemProjectile {
+public class Slimeball extends ProjectileItemEntity {
     protected int elasticity = getMaxBounceTimes();
 
-    public static Slimeball from(Level l, LivingEntity e, ItemStack stack) {
+    public static Slimeball from(World l, LivingEntity e, ItemStack stack) {
         final Slimeball ball = new Slimeball(l, e);
         ball.setItem(stack);
-        ball.shootFromRotation(e, e.getXRot(), e.getYRot(), 0.0F, 1.5F, 1.0F);
+        ball.shootFromRotation(e, e.xRot, e.yRot, 0.0F, 1.5F, 1.0F);
         return ball;
     }
 
-    public Slimeball(EntityType<? extends ThrowableItemProjectile> t, Level l) {
+    public Slimeball(EntityType<? extends ProjectileItemEntity> t, World l) {
         super(t, l);
     }
 
-    protected Slimeball(EntityType<? extends ThrowableItemProjectile> pEntityType, LivingEntity pShooter, Level pLevel) {
+    protected Slimeball(EntityType<? extends ProjectileItemEntity> pEntityType, LivingEntity pShooter, World pLevel) {
         super(pEntityType, pShooter, pLevel);
     }
 
-    private Slimeball(Level l, LivingEntity e) {
+    private Slimeball(World l, LivingEntity e) {
         this(EntityTypeReference.SLIME_BALL.cast(), e, l);
     }
 
@@ -61,37 +57,41 @@ public class Slimeball extends ThrowableItemProjectile {
         if (id < 3 || id > 5) return;
         final boolean bounce = id != 3;
         level.playLocalSound(getX(), getY(), getZ(), bounce ? getBounceSound() : getDestroySound(),
-                SoundSource.BLOCKS, bounce ? .5F : .25F, bounce ? (.2F * elasticity + random.nextFloat() * .1F) : .8F, true);
-        ParticleOptions particleoptions = this.getParticle(bounce);
+                SoundCategory.BLOCKS, bounce ? .5F : .25F, bounce ? (.2F * elasticity + random.nextFloat() * .1F) : .8F, true);
+        IParticleData particleoptions = this.getParticle(bounce);
         for (int i = 0; i < 20 - 4 * id; ++i) {
             level.addParticle(particleoptions, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
         }
     }
 
-    protected ParticleOptions getParticle(boolean bounce) {
+    protected IParticleData getParticle(boolean bounce) {
         return ParticleTypes.ITEM_SLIME;
     }
 
     @Override
-    protected void onHitEntity(EntityHitResult result) {
+    protected void onHitEntity(EntityRayTraceResult result) {
         super.onHitEntity(result);
         if (level.isClientSide()) return;
         final Entity e = result.getEntity();
-        if (!(e instanceof LivingEntity l)) {
+        if (!(e instanceof LivingEntity)) {
             bounce(e.getMotionDirection().getOpposite(), true);
             return;
         }
+        final LivingEntity l = (LivingEntity) e;
         if (canHealOrStrengthen(l)) {
             if (l.getHealth() < l.getMaxHealth()) l.heal(1.0F);
-            else if (l instanceof Slime slime) slime.setSize(slime.getSize() + (elasticity + 1) / 2, true);
+            else if (l instanceof SlimeEntity) {
+                final SlimeEntity slime = ((SlimeEntity) l);
+                slime.setSize(slime.getSize() + (elasticity + 1) / 2, true);
+            }
         } else if (l.getArmorCoverPercentage() < 1.0F) penetrateLivingEntity(l);
         else if (elasticity-- <= 0) destroy();
         else bounce(l.getMotionDirection().getOpposite(), true);
-        this.discard();
+        this.remove();
     }
 
     @Override
-    protected void onHitBlock(BlockHitResult result) {
+    protected void onHitBlock(BlockRayTraceResult result) {
         super.onHitBlock(result);
         final BlockState state = level.getBlockState(result.getBlockPos());
         if (state.is(ThrowableSlimeball.BLOCK_STICKY)) destroy();
@@ -100,19 +100,20 @@ public class Slimeball extends ThrowableItemProjectile {
         else bounce(result.getDirection(), true);
     }
 
+
     @Override
-    public boolean shouldBlockExplode(Explosion pExplosion, BlockGetter pLevel, BlockPos pPos, BlockState pBlockState, float pExplosionPower) {
+    public boolean shouldBlockExplode(Explosion pExplosion, IBlockReader pLevel, BlockPos pPos, BlockState pBlockState, float pExplosionPower) {
         return false;
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(CompoundNBT tag) {
         super.addAdditionalSaveData(tag);
         tag.putInt("elasticity", elasticity);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(CompoundNBT tag) {
         super.readAdditionalSaveData(tag);
         elasticity = tag.getInt("elasticity");
     }
@@ -130,7 +131,7 @@ public class Slimeball extends ThrowableItemProjectile {
 
     protected void destroy() {
         this.level.broadcastEntityEvent(this, (byte) 3);
-        this.discard();
+        this.remove();
     }
 
     protected SoundEvent getBounceSound() {
@@ -147,7 +148,7 @@ public class Slimeball extends ThrowableItemProjectile {
 
     protected void penetrateLivingEntity(LivingEntity living) {
         living.hurt(getDamageSource(), 1.0F);
-        living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, elasticity * 20, 0));
+        living.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, elasticity * 20, 0));
     }
 
     protected DamageSource getDamageSource() {
