@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "throwable_slimeball",
+  "version": "${version}",
+  "name": "ThrowableSlimeball",
+  "description": "",
+  "authors": [
+    "Tapio"
+  ],
+  "contact": {},
+  "license": "Nova Relay License 1.0",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "committee.nova.throwableslimeball.fabric.client.ThrowableSlimeballClient"
+    ],
+    "main": [
+      "committee.nova.throwableslimeball.fabric.ThrowableSlimeball"
+    ]
+  },
+  "mixins": [
+    "throwableslimeball.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "*",
+    "fabric": "*",
+    "minecraft": "*"
+  }
+}
