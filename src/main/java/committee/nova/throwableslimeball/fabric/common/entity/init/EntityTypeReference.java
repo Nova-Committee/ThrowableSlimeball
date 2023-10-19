@@ -15,11 +15,11 @@ import java.util.function.Supplier;
 public enum EntityTypeReference implements Supplier<EntityType<?>> {
     SLIME_BALL(
             "slime_ball",
-            EntityType.Builder.of(Slimeball::new, MobCategory.MISC)
+            EntityType.Builder.<Slimeball>of(Slimeball::new, MobCategory.MISC)
                     .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10)
                     .build("slime_ball")
     ),
-    MAGMA_CREAM("magma_cream", EntityType.Builder.of(MagmaCream::new, MobCategory.MISC)
+    MAGMA_CREAM("magma_cream", EntityType.Builder.<MagmaCream>of(MagmaCream::new, MobCategory.MISC)
             .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10).fireImmune()
             .build("magma_cream")),
     ;
