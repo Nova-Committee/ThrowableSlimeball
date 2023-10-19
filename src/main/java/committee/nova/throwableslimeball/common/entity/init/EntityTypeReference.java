@@ -12,10 +12,10 @@ import java.util.Locale;
 import java.util.function.Supplier;
 
 public enum EntityTypeReference implements Supplier<EntityType<?>> {
-    SLIME_BALL(() -> EntityType.Builder.of(Slimeball::new, EntityClassification.MISC)
+    SLIME_BALL(() -> EntityType.Builder.<Slimeball>of(Slimeball::new, EntityClassification.MISC)
             .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10)
             .build("slime_ball")),
-    MAGMA_CREAM(() -> EntityType.Builder.of(MagmaCream::new, EntityClassification.MISC)
+    MAGMA_CREAM(() -> EntityType.Builder.<MagmaCream>of(MagmaCream::new, EntityClassification.MISC)
             .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10).fireImmune()
             .build("magma_cream")),
     ;

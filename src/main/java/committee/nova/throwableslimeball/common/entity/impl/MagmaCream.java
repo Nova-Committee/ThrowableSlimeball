@@ -20,6 +20,11 @@ public class MagmaCream extends Slimeball {
         super(t, l);
     }
 
+    public MagmaCream(World l, double x, double y, double z) {
+        this(EntityTypeReference.MAGMA_CREAM.cast(), l);
+        setPos(x, y, z);
+    }
+
     private MagmaCream(World l, LivingEntity e) {
         super(EntityTypeReference.MAGMA_CREAM.cast(), e, l);
     }

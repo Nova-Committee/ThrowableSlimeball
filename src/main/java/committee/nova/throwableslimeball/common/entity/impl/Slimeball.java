@@ -39,6 +39,11 @@ public class Slimeball extends ProjectileItemEntity {
         super(t, l);
     }
 
+    public Slimeball(World l, double x, double y, double z) {
+        this(EntityTypeReference.SLIME_BALL.cast(), l);
+        setPos(x, y, z);
+    }
+
     protected Slimeball(EntityType<? extends ProjectileItemEntity> pEntityType, LivingEntity pShooter, World pLevel) {
         super(pEntityType, pShooter, pLevel);
     }
@@ -82,7 +87,8 @@ public class Slimeball extends ProjectileItemEntity {
             if (l.getHealth() < l.getMaxHealth()) l.heal(1.0F);
             else if (l instanceof SlimeEntity) {
                 final SlimeEntity slime = ((SlimeEntity) l);
-                slime.setSize(slime.getSize() + (elasticity + 1) / 2, true);
+                final int size = slime.getSize();
+                if (random.nextInt(size + 9) == 0) slime.setSize(size + 1, true);
             }
         } else if (l.getArmorCoverPercentage() < 1.0F) penetrateLivingEntity(l);
         else if (elasticity-- <= 0) destroy();
