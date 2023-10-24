@@ -7,13 +7,14 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class MagmaCreamItem extends Item {
     public MagmaCreamItem() {
-        super(new Properties().stacksTo(64));
+        super(new Properties().tab(CreativeModeTab.TAB_BREWING).stacksTo(64));
     }
 
     @Override
