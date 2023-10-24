@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[38,)"
+loaderVersion = "[36,)"
 license = "Nova Relay License 1.0"
 [[mods]]
 modId = "throwable_slimeball"
