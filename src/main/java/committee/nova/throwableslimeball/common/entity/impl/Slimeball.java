@@ -13,6 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
@@ -24,6 +25,7 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 public class Slimeball extends ProjectileItemEntity {
     protected int elasticity = getMaxBounceTimes();
@@ -167,5 +169,10 @@ public class Slimeball extends ProjectileItemEntity {
 
     public double getSpeedFactorAfterBounce() {
         return 1.0 - CommonConfig.slimeBallSpeedDecay.get();
+    }
+
+    @Override
+    public IPacket<?> getAddEntityPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 }
