@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "committee.nova.throwableslimeball.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "throwableslimeball.refmap.json",
+  "mixins": [
+    "MixinItem"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
