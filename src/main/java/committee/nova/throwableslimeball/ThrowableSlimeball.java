@@ -5,10 +5,8 @@ import committee.nova.throwableslimeball.common.dispenser.ProxiedProjectileDispe
 import committee.nova.throwableslimeball.common.entity.init.EntityTypeReference;
 import committee.nova.throwableslimeball.common.item.impl.MagmaCreamProxy;
 import committee.nova.throwableslimeball.common.item.impl.SlimeballProxy;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
@@ -24,18 +22,15 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class ThrowableSlimeball {
     public static final String MODID = "throwable_slimeball";
 
-    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, MODID);
-    // SB NeoForge removed Registry Replacement without providing any alternative except mixin
-    //public static final DeferredRegister<Item> ITEMS_VANILLA = DeferredRegister.create(BuiltInRegistries.ITEM, "minecraft");
-    public static final TagKey<EntityType<?>> ENTITY_SLIME = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(MODID, "slime"));
-    public static final TagKey<EntityType<?>> ENTITY_MAGMA_CUBE = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(MODID, "magma_cube"));
-    public static final TagKey<Block> BLOCK_ELASTIC = BlockTags.create(ResourceLocation.fromNamespaceAndPath(MODID, "elastic"));
-    public static final TagKey<Block> BLOCK_STICKY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(MODID, "sticky"));
+    public static final DeferredRegister.Entities ENTITIES = DeferredRegister.createEntities(MODID);
+    public static final TagKey<EntityType<?>> ENTITY_SLIME = TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MODID, "slime"));
+    public static final TagKey<EntityType<?>> ENTITY_MAGMA_CUBE = TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MODID, "magma_cube"));
+    public static final TagKey<Block> BLOCK_ELASTIC = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(MODID, "elastic"));
+    public static final TagKey<Block> BLOCK_STICKY = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(MODID, "sticky"));
 
     public ThrowableSlimeball(IEventBus bus, ModContainer container) {
         container.registerConfig(ModConfig.Type.COMMON, CommonConfig.CFG);
         EntityTypeReference.init();
-        //ITEMS_VANILLA.register(bus);
         ENTITIES.register(bus);
         DispenserBlock.registerBehavior(Items.SLIME_BALL, new ProxiedProjectileDispenseBehavior(SlimeballProxy.getInstance()));
         DispenserBlock.registerBehavior(Items.MAGMA_CREAM, new ProxiedProjectileDispenseBehavior(MagmaCreamProxy.getInstance()));

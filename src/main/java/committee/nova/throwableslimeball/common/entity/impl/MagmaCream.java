@@ -5,35 +5,32 @@ import committee.nova.throwableslimeball.common.config.CommonConfig;
 import committee.nova.throwableslimeball.common.entity.init.EntityTypeReference;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
 public class MagmaCream extends Slimeball {
-    public MagmaCream(EntityType<? extends ThrowableItemProjectile> t, Level l) {
-        super(t, l);
+    public static MagmaCream create(ServerLevel level, LivingEntity shooter, ItemStack stack) {
+        return new MagmaCream(EntityTypeReference.MAGMA_CREAM.get(), shooter, level, stack);
     }
 
-    public MagmaCream(Level l, double x, double y, double z) {
-        this(EntityTypeReference.MAGMA_CREAM.cast(), l);
-        this.setPos(x, y, z);
+    public MagmaCream(EntityType<? extends ThrowableItemProjectile> type, Level level) {
+        super(type, level);
     }
 
-    private MagmaCream(Level l, LivingEntity e) {
-        super(EntityTypeReference.MAGMA_CREAM.cast(), e, l);
+    public MagmaCream(Level level, double x, double y, double z, ItemStack stack) {
+        super(EntityTypeReference.MAGMA_CREAM.get(), x, y, z, level, stack);
     }
 
-    public static MagmaCream from(Level l, LivingEntity e, ItemStack stack) {
-        final MagmaCream ball = new MagmaCream(l, e);
-        ball.setItem(stack);
-        ball.shootFromRotation(e, e.getXRot(), e.getYRot(), 0.0F, 1.5F, 1.0F);
-        return ball;
+    public MagmaCream(EntityType<? extends ThrowableItemProjectile> type, LivingEntity shooter, Level level, ItemStack stack) {
+        super(type, shooter, level, stack);
     }
 
     @Override
@@ -48,7 +45,7 @@ public class MagmaCream extends Slimeball {
 
     @Override
     protected boolean canHealOrStrengthen(LivingEntity living) {
-        return living.getType().is(ThrowableSlimeball.ENTITY_MAGMA_CUBE);
+        return living.is(ThrowableSlimeball.ENTITY_MAGMA_CUBE);
     }
 
     @Override
